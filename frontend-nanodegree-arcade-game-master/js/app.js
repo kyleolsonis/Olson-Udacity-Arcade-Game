@@ -1,3 +1,9 @@
+let pointsWon = 0;
+function addPoint() {
+    document.getElementById("points").innerHTML = pointsWon;
+  };
+
+
 // Enemy class followed by instances of the bugs
 var Enemy = function(x, y, z) {
     this.x = x; //Starts just off of the left side of the game board
@@ -35,33 +41,59 @@ Enemy.prototype.render = function() {
      this.Ymove = 83 //Height of tiles
      this.x = this.Xmove * 2; //starts player at bottom middle of screen
      this.y = this.Ymove * 5 - 30;
-
-     //Hero character:
+     //Hero character image:
      this.sprite = 'images/char-horn-girl.png';
    }
 
       //Check collison here
       update() {
         for(let enemy of allEnemies) {
-          console.log(this.y);
+          //console.log(this.y);
           if(enemy.y === this.y){
             //If y axis's both match and if player is within 25...
             //...pixels (Xmove/4) on the x axis then the collision occurred
             if(enemy.x + enemy.Xmove/4 > this.x && enemy.x < this.x + this.Xmove/4){
               alert("You're squished!");// alerts player to a death
-              player.reset();// Resets to bottom middle of screen
+              setTimeout(function(){
+                window.location.reload();//Resets page to play again
+              }, 300);//end setTimeout
+              //player.reset();// Resets to bottom middle of screen
                 }//end enemy.x...
               } //end if enemy.y === this.y
             }//end for loop
 
-            //Check for win:
+            //Check for whether player is in the water:
           if (this.y <= 0){
-            setTimeout(function(){
+            setTimeout(function(){//Adds a delay to make the player reset less jarring
               player.reset();// Resets to bottom middle of screen
-                //alert("Splash! You win!")
               }, 1000);//end setTimeout
-              //;
             }//end else if "this.y <= 0"
+
+        //Check for jewel collection
+        for(let jewel of allJewels) {
+          console.log(jewel.y, this.y);
+          if(jewel.y === this.y){
+                //If y axis's both match and if player is within 25...
+                //...pixels (Xmove/4) on the x axis then the collision occurred
+            if(jewel.x + jewel.Xmove/4 > this.x && jewel.x < this.x + this.Xmove/4){
+              //If jewel collision occurs then jewel is moved off of the screen
+              jewel.x = -101;
+              jewel.y = -83;
+              pointsWon += 1;
+              addPoint();
+              if (pointsWon === 3) {
+                setTimeout(function(){
+                alert("You Win!");
+                player.reset();
+              }, 300);//end setTimeout
+                setTimeout(function(){
+                  window.location.reload();//Resets page to play again
+                }, 1000);//end setTimeout
+              }
+            }//end jewel.x...
+          } //end if jewel.y === this.y
+        }//end for loop
+
       }//end update()
 
      //Render:
@@ -102,7 +134,7 @@ Enemy.prototype.render = function() {
        }
  }
 
-// TODO: Now instantiate your objects.
+
 // Place all enemy objects in an array called allEnemies
   //fill this array using a loop for up to number of desired
   //enemies, create a new Enemy object and push it into the
@@ -137,24 +169,27 @@ document.addEventListener('keyup', function(e) {
 });
 
 
-
-
-
-//Add jewels to board to collect?
-/*
+//Add jewels to board to collect:
 var Jewel = function(x, y) {
   this.x = x;
   this.y = y;
   this.Xmove = 101 //Width of tiles
   this.Ymove = 83 //Height of tiles
-  this.sprite = 'images/Gem Orange.png';
+  this.sprite = 'images/Gem Green.png';
 };
 
-Jewel.prototype.update = function(location){
-  if (player.y <= 0){
-    this.x = this.Xmove * 5;
-    this.y =
 
-  }
-}
-*/
+// Draw the jewel on the screen:
+Jewel.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+
+//Instances of jewels
+const jewel1 = new Jewel(101, 53);//1st jewel
+const jewel2 = new Jewel(404, 53);//2nd jewel
+const jewel3 = new Jewel(202, 219);//3rd jewel
+
+
+const allJewels = [];
+allJewels.push(jewel1, jewel2, jewel3);

@@ -93,6 +93,9 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
+        //allJewels.forEach(function(jewel) {
+          //  jewel.update();
+        //});
         player.update();
     }
 
@@ -153,6 +156,10 @@ var Engine = (function(global) {
            enemy.render();
         });
 
+        allJewels.forEach(function(jewel) {
+           jewel.render();
+        });
+
         player.render();
     }
 
@@ -175,7 +182,10 @@ var Engine = (function(global) {
         'images/enemy-bug.png',
         'images/char-boy.png',
         'images/char-horn-girl.png',
-        'images/char-cat-girl.png'
+        'images/char-cat-girl.png',
+        'images/Gem Blue.png',
+        'images/Gem Green.png',
+        'images/Gem Orange.png'
     ]);
     Resources.onReady(init);
 
